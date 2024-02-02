@@ -12,6 +12,7 @@
     "@clerk/nextjs": "^4.29.5",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-menubar": "^1.0.4",
+    "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@types/node": "20.11.10",
     "@types/react": "18.2.48",
