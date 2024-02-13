@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { QuestionsSchema } from "@/lib/validation";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
+import { createQuestion } from "@/lib/actions/question.action";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const type: any = "create";
@@ -36,11 +37,13 @@ const Questions = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof QuestionsSchema>) {
+  async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
+    console.log("submit");
 
     try {
       // TODO: Create new data with Back-end interaction
+      await createQuestion({});
       console.log(values);
     } catch (error) {
     } finally {
@@ -58,7 +61,6 @@ const Questions = () => {
 
       const tagInput = e.target as HTMLInputElement;
       const tagValue = tagInput.value;
-      console.log("chạy");
       if (tagValue !== "") {
         if (tagValue.length > 15) {
           return form.setError("tags", {
@@ -120,7 +122,7 @@ const Questions = () => {
           <FormField
             control={form.control}
             name="explanation"
-            render={() => (
+            render={({ field }) => (
               <FormItem className="flex w-full flex-col gap-3">
                 <FormLabel className="paragraph-semibold text-dark400_light800">
                   Detail explanation of your problem
@@ -132,6 +134,10 @@ const Questions = () => {
                     onInit={(evt, editor) => {
                       // @ts-expect-error ignore-next-line
                       editorRef.current = editor;
+                    }}
+                    onBlur={field.onBlur}
+                    onEditorChange={(content) => {
+                      field.onChange(content);
                     }}
                     initialValue=""
                     init={{
