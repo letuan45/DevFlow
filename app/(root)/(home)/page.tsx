@@ -5,65 +5,13 @@ import NoResult from "@/components/shared/NoResult";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
+import { getQuestions } from "@/lib/actions/question.action";
 import Link from "next/link";
 import React from "react";
 
-const DUMMY_QUESTIONS = [
-  {
-    _id: "1",
-    title: "How to use TypeScript?",
-    tags: [
-      { _id: "tag1", name: "typescript" },
-      { _id: "tag2", name: "programming" },
-    ],
-    author: {
-      _id: "author1",
-      name: "John Doe",
-      picture: "/assets/images/logo.png",
-    },
-    upvotes: "20",
-    views: 1000,
-    answers: [
-      {
-        content: "You can use TypeScript by installing it via npm.",
-        author: "user3",
-      },
-      {
-        content: "Make sure to set up a tsconfig.json file for configuration.",
-        author: "user4",
-      },
-    ],
-    createdAt: new Date("2023-01-01"),
-  },
-  {
-    _id: "2",
-    title: "Best practices for React Hooks?",
-    tags: [
-      { _id: "tag3", name: "react" },
-      { _id: "tag4", name: "hooks" },
-    ],
-    author: {
-      _id: "author2",
-      name: "Jane Smith",
-      picture: "/assets/images/logo.png",
-    },
-    upvotes: "10",
-    views: 800,
-    answers: [
-      {
-        content: "Ensure to handle dependencies properly in useEffect.",
-        author: "user7",
-      },
-      {
-        content: "Use the useCallback hook for optimizing performance.",
-        author: "user8",
-      },
-    ],
-    createdAt: new Date("2023-02-15"),
-  },
-];
+const Home = async () => {
+  const questions = await getQuestions({});
 
-const Home = () => {
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -90,16 +38,18 @@ const Home = () => {
       </div>
       <HomeFilter />
       <div className="mt-10 flex w-full flex-col gap-6">
-        {DUMMY_QUESTIONS.length === 0 && (
-          <NoResult
-            title="There is no question to show"
-            link=""
-            linkTitle="Ask a Question"
-            description="Looks like there is no question that you want to show, please choose another type of question you want to show or add a new question"
-          />
-        )}
-        {DUMMY_QUESTIONS.length >= 0 &&
-          DUMMY_QUESTIONS.map((item) => (
+        {!questions ||
+          (questions.length === 0 && (
+            <NoResult
+              title="There is no question to show"
+              link=""
+              linkTitle="Ask a Question"
+              description="Looks like there is no question that you want to show, please choose another type of question you want to show or add a new question"
+            />
+          ))}
+        {questions &&
+          questions.length >= 0 &&
+          questions.map((item) => (
             <QuestionCard
               _id={item._id}
               author={item.author}
