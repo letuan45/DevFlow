@@ -5,6 +5,7 @@ import { connectToDatabase } from "../mongoose";
 import {
   CreateUserParams,
   DeleteUserParams,
+  GetAllUsersParams,
   UpdateUserParams,
 } from "./shared.types";
 import { revalidatePath } from "next/cache";
@@ -68,6 +69,19 @@ export const deleteUser = async (params: DeleteUserParams) => {
     const deletedUser = await User.findByIdAndDelete(userToDelete._id);
 
     return deletedUser;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const getAllUsers = async (params: GetAllUsersParams) => {
+  try {
+    connectToDatabase();
+    // const { page = 1, pageSize = 20, filter, searchQuery } = params;
+
+    return await User.find({}).sort({ createdAt: -1 });
   } catch (error) {
     console.log(error);
     throw error;

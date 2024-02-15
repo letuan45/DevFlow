@@ -42,7 +42,6 @@ export const createQuestion = async (params: CreateQuestionParams) => {
       tagDocuments.push(existingTag._id);
     }
 
-    console.log(tagDocuments);
     await Question.findByIdAndUpdate(question._id, {
       $push: { tags: { $each: tagDocuments } },
     });
