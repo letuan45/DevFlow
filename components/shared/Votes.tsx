@@ -44,7 +44,6 @@ const Votes = ({
   }, [itemId, userId, pathname, router]);
 
   const handleVote = async (action: string) => {
-    console.log("handleVote");
     if (!userId) return;
 
     if (action === "upvote") {
