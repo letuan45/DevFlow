@@ -4,6 +4,7 @@ import RenderTag from "../shared/RenderTag";
 import Metric from "../shared/Metric";
 import { getTimeStamp } from "@/lib/utils";
 import { SignedIn } from "@clerk/nextjs";
+import EditDeleteAction from "../shared/EditDeleteAction";
 
 interface Props {
   clerkId?: string | null;
@@ -54,8 +55,7 @@ const QuestionCard = ({
         {/* TODO: if signed in add delete action */}
         <SignedIn>
           {showActionButtons && (
-            <div></div>
-            // <EditDeleteAction type="Question" itemId={JSON.stringify(_id)} />
+            <EditDeleteAction type="Question" itemId={JSON.stringify(_id)} />
           )}
         </SignedIn>
       </div>

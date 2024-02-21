@@ -3,6 +3,7 @@ import { SignedIn } from "@clerk/nextjs";
 import Link from "next/link";
 import React from "react";
 import Metric from "../shared/Metric";
+import EditDeleteAction from "../shared/EditDeleteAction";
 
 interface Props {
   clerkId?: string | null;
@@ -32,23 +33,19 @@ const AnswerCard = ({
   const showActionButtons = clerkId && clerkId === author.clerkId;
 
   return (
-    <Link
-      href={`/question/${question._id}/#${_id}`}
-      className="card-wrapper rounded-[10px] px-11 py-9"
-    >
+    <div className="card-wrapper rounded-[10px] px-11 py-9">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
-        <div>
+        <Link href={`/question/${question._id}/#${_id}`}>
           <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden">
             {getTimeStamp(createdAt)}
           </span>
           <h3 className="sm:h3-semibold base-semibold text-dark200_light900 line-clamp-1 flex-1">
             {question.title}
           </h3>
-        </div>
+        </Link>
         <SignedIn>
           {showActionButtons && (
-            <div></div>
-            // <EditDeleteAction type="Answer" itemId={JSON.stringify(_id)} />
+            <EditDeleteAction type="Answer" itemId={JSON.stringify(_id)} />
           )}
         </SignedIn>
       </div>
@@ -74,7 +71,7 @@ const AnswerCard = ({
           />
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

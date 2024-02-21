@@ -37,11 +37,13 @@ const Votes = ({
   const router = useRouter();
 
   useEffect(() => {
-    viewQuestion({
-      questionId: JSON.parse(itemId),
-      userId: userId ? JSON.parse(userId) : undefined,
-    });
-  }, [itemId, userId, pathname, router]);
+    if (type === "Question") {
+      viewQuestion({
+        questionId: JSON.parse(itemId),
+        userId: userId ? JSON.parse(userId) : undefined,
+      });
+    }
+  }, [itemId, userId, pathname, router, type]);
 
   const handleVote = async (action: string) => {
     if (!userId) return;
