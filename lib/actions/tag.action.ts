@@ -14,7 +14,15 @@ import Question from "@/database/question.model";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getAllTag = async (params: GetAllTagsParams) => {
   try {
-    const tags = await Tag.find({});
+    connectToDatabase();
+    const { searchQuery } = params;
+    const query: FilterQuery<typeof Tag> = {};
+
+    if (searchQuery) {
+      query.$or = [{ name: { $regex: new RegExp(searchQuery, "i") } }];
+    }
+
+    const tags = await Tag.find(query);
     return tags;
   } catch (error) {}
 };
@@ -75,6 +83,27 @@ export const getQuestionsByTagId = async (
     const questions = tag.questions;
 
     return { tagTitle: tag.title, questions };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const getPopularTags = async () => {
+  try {
+    connectToDatabase();
+
+    const popularTags = await Tag.aggregate([
+      {
+        $project: {
+          name: 1,
+          numberOfQuestions: { $size: { $ifNull: ["$questions", []] } },
+        },
+      },
+      { $sort: { numberOfQuestions: -1 } },
+      { $limit: 5 },
+    ]);
+    return popularTags;
   } catch (error) {
     console.log(error);
     throw error;
