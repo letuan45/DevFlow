@@ -7,7 +7,11 @@ import { SearchParamsProps } from "@/types";
 import React from "react";
 
 const Page = async ({ searchParams }: SearchParamsProps) => {
-  const users = await getAllUsers({ searchQuery: searchParams.q });
+  const users = await getAllUsers({
+    searchQuery: searchParams.q,
+    filter: searchParams.filter,
+  });
+
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">All Users</h1>

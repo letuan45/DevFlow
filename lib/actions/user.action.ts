@@ -88,7 +88,7 @@ export const getAllUsers = async (params: GetAllUsersParams) => {
   try {
     connectToDatabase();
     const { page = 1, pageSize = 20, filter, searchQuery } = params;
-    console.log(page, pageSize, filter);
+    console.log(page, pageSize);
     const query: FilterQuery<typeof User> = {};
 
     if (searchQuery) {
@@ -98,7 +98,22 @@ export const getAllUsers = async (params: GetAllUsersParams) => {
       ];
     }
 
-    return await User.find(query).sort({ createdAt: -1 });
+    let sortOption = {};
+
+    switch (filter) {
+      case "new_users":
+        sortOption = { joinedAt: -1 };
+        break;
+      case "old_users":
+        sortOption = { joinedAt: 1 };
+        break;
+      case "top_contributors":
+        sortOption = { reputation: -1 };
+        break;
+      default:
+        break;
+    }
+    return await User.find(query).sort(sortOption);
   } catch (error) {
     console.log(error);
     throw error;
@@ -142,7 +157,30 @@ export const getSavedQuestions = async (params: GetSavedQuestionsParams) => {
     const { clerkId, filter, page = 1, pageSize = 10, searchQuery } = params;
 
     //TODO: continute filter and pagination
-    console.log(filter, page, pageSize, searchQuery);
+    console.log(page, pageSize, searchQuery);
+
+    let sortOption = {};
+
+    switch (filter) {
+      case "most_recent":
+        sortOption = { createdAt: -1 };
+        break;
+      case "oldest":
+        sortOption = { createdAt: 1 };
+        break;
+      case "most_voted":
+        sortOption = { upvotes: -1 };
+        break;
+      case "most_viewed":
+        sortOption = { views: -1 };
+        break;
+      case "most_answered":
+        sortOption = { answers: -1 };
+
+        break;
+      default:
+        break;
+    }
 
     const query: FilterQuery<typeof Question> = searchQuery
       ? { title: { $regex: new RegExp(searchQuery, "i") } }
@@ -151,7 +189,7 @@ export const getSavedQuestions = async (params: GetSavedQuestionsParams) => {
       path: "saved",
       match: query,
       options: {
-        sort: { createdAt: -1 },
+        sort: sortOption,
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
