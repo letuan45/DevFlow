@@ -1,5 +1,6 @@
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
+import Pagination from "@/components/shared/Pagination";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { TagFilters } from "@/constants/filters";
 import { getAllTag } from "@/lib/actions/tag.action";
@@ -8,10 +9,12 @@ import Link from "next/link";
 import React from "react";
 
 const Page = async ({ searchParams }: SearchParamsProps) => {
-  const tags = await getAllTag({
+  const result = await getAllTag({
     searchQuery: searchParams.q,
     filter: searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
   });
+
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">All Tags</h1>
@@ -29,8 +32,9 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
         />
       </div>
       <section className="mt-12 flex flex-wrap gap-4">
-        {tags!.length > 0 &&
-          tags!.map((tag) => (
+        {result &&
+          result.tags!.length > 0 &&
+          result.tags!.map((tag) => (
             <Link
               href={`/tags/${tag._id}`}
               key={tag._id}
@@ -52,7 +56,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
               </article>
             </Link>
           ))}
-        {tags!.length === 0 && (
+        {result && result.tags!.length === 0 && (
           <NoResult
             description="Looks like there is no Questions"
             title="No Tags Found"
@@ -61,6 +65,12 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
           />
         )}
       </section>
+      <div className="mt-10">
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={result ? result.isNext : false}
+        />
+      </div>
     </>
   );
 };

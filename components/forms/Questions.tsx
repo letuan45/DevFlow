@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useRef, useState } from "react";
@@ -39,10 +40,10 @@ const Questions = ({ mongoUserId, type, questionDetails }: Props) => {
   const parsedQuestionDetails = questionDetails
     ? JSON.parse(questionDetails)
     : {};
-  const tagNames = parsedQuestionDetails
-    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      parsedQuestionDetails.tags.map((item: any) => item.name)
-    : [];
+  const tagNames =
+    parsedQuestionDetails && parsedQuestionDetails.tags
+      ? parsedQuestionDetails.tags.map((item: any) => item.name)
+      : [];
 
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),

@@ -2,6 +2,7 @@ import QuestionCard from "@/components/cards/QuestionCard";
 import HomeFilter from "@/components/home/HomeFilter";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
+import Pagination from "@/components/shared/Pagination";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
@@ -11,9 +12,10 @@ import Link from "next/link";
 import React from "react";
 
 const Home = async ({ searchParams }: SearchParamsProps) => {
-  const questions = await getQuestions({
+  const result = await getQuestions({
     searchQuery: searchParams.q,
     filter: searchParams.filter,
+    page: searchParams?.page ? +searchParams.page : 1,
   });
 
   return (
@@ -42,8 +44,8 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
       </div>
       <HomeFilter />
       <div className="mt-10 flex w-full flex-col gap-6">
-        {!questions ||
-          (questions.length === 0 && (
+        {!result ||
+          (result.questions.length === 0 && (
             <NoResult
               title="There is no question to show"
               link=""
@@ -51,9 +53,10 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
               description="Looks like there is no question that you want to show, please choose another type of question you want to show or add a new question"
             />
           ))}
-        {questions &&
-          questions.length >= 0 &&
-          questions.map((item) => (
+        {result &&
+          result.questions &&
+          result.questions.length >= 0 &&
+          result.questions.map((item) => (
             <QuestionCard
               _id={item._id}
               author={item.author}
@@ -66,6 +69,12 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
               answers={item.answers}
             />
           ))}
+      </div>
+      <div className="mt-10">
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={result ? result.isNext : false}
+        />
       </div>
     </>
   );

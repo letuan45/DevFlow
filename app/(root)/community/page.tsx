@@ -1,5 +1,6 @@
 import UserCard from "@/components/cards/UserCard";
 import Filter from "@/components/shared/Filter";
+import Pagination from "@/components/shared/Pagination";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { UserFilters } from "@/constants/filters";
 import { getAllUsers } from "@/lib/actions/user.action";
@@ -7,9 +8,10 @@ import { SearchParamsProps } from "@/types";
 import React from "react";
 
 const Page = async ({ searchParams }: SearchParamsProps) => {
-  const users = await getAllUsers({
+  const result = await getAllUsers({
     searchQuery: searchParams.q,
     filter: searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
   });
 
   return (
@@ -29,14 +31,21 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
         />
       </div>
       <section className="mt-12 flex flex-wrap gap-4">
-        {users.length === 0 && (
+        {result && result.users.length === 0 && (
           <div className="paragraph-regular text-dark200_light800 mx-auto max-w-4xl text-center">
             No Users Found!
           </div>
         )}
-        {users.length > 0 &&
-          users.map((user) => <UserCard key={user._id} user={user} />)}
+        {result &&
+          result.users.length > 0 &&
+          result.users.map((user) => <UserCard key={user._id} user={user} />)}
       </section>
+      <div className="mt-10">
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={result ? result.isNext : false}
+        />
+      </div>
     </>
   );
 };

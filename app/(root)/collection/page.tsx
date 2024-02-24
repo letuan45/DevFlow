@@ -1,6 +1,7 @@
 import QuestionCard from "@/components/cards/QuestionCard";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
+import Pagination from "@/components/shared/Pagination";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { QuestionFilters } from "@/constants/filters";
 import { getSavedQuestions } from "@/lib/actions/user.action";
@@ -13,11 +14,14 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
   if (!userClerkId) {
     return null;
   }
-  const questions = await getSavedQuestions({
+  const result = await getSavedQuestions({
     clerkId: userClerkId,
     searchQuery: searchParams.q,
     filter: searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
   });
+
+  console.log(result.isNext);
 
   return (
     <>
@@ -36,8 +40,8 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
         />
       </div>
       <div className="mt-10 flex w-full flex-col gap-6">
-        {!questions ||
-          (questions.length === 0 && (
+        {(result && !result.questions) ||
+          (result.questions.length === 0 && (
             <NoResult
               title="There is no question to show"
               link=""
@@ -45,10 +49,11 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
               description="Looks like there is no question that you want to show, please choose another type of question you want to show or add a new question"
             />
           ))}
-        {questions &&
-          questions.length >= 0 &&
+        {result &&
+          result.questions &&
+          result.questions.length >= 0 &&
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          questions.map((item: any) => (
+          result.questions.map((item: any) => (
             <QuestionCard
               _id={item._id}
               author={item.author}
@@ -61,6 +66,12 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
               answers={item.answers}
             />
           ))}
+      </div>
+      <div className="mt-10">
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={result ? result.isNext : false}
+        />
       </div>
     </>
   );
