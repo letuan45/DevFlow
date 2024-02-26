@@ -24,7 +24,15 @@ export const createAnswer = async (params: CreateAnswerParams) => {
       $push: { answers: newAnswer._id },
     });
 
-    console.log(questionObject);
+    await Interaction.create({
+      user: author,
+      action: "answer",
+      question,
+      answer: newAnswer._id,
+      tags: questionObject.tags,
+    });
+
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 10 } });
 
     revalidatePath(path);
   } catch (error) {
@@ -97,6 +105,14 @@ export const upvoteAswer = async (params: AnswerVoteParams) => {
       throw new Error("Can't find Answer to update");
     }
 
+    await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasupVoted ? -2 : 2 },
+    });
+
+    await User.findByIdAndUpdate(answer.author, {
+      $inc: { reputation: hasupVoted ? -10 : 10 },
+    });
+
     revalidatePath(path);
   } catch (error) {
     console.log(error);
@@ -120,12 +136,20 @@ export const downvoteAnswer = async (params: AnswerVoteParams) => {
     } else {
       updateQuery = { $addToSet: { downvotes: userId } };
     }
-    const question = await Answer.findByIdAndUpdate(answerId, updateQuery, {
+    const answer = await Answer.findByIdAndUpdate(answerId, updateQuery, {
       new: true,
     });
-    if (!question) {
+    if (!answer) {
       throw new Error("Can't find Answer to update");
     }
+
+    await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasdownVoted ? -2 : 2 },
+    });
+
+    await User.findByIdAndUpdate(answer.author, {
+      $inc: { reputation: hasdownVoted ? -10 : 10 },
+    });
 
     revalidatePath(path);
   } catch (error) {
