@@ -43,12 +43,13 @@ export const getAllTag = async (params: GetAllTagsParams) => {
     }
 
     const tags = await Tag.find(query)
-      .sort(sortOption)
       .skip(skipAmount)
-      .limit(pageSize);
+      .limit(pageSize)
+      .sort(sortOption);
 
-    const totalTags = await Question.countDocuments(query);
+    const totalTags = await Tag.countDocuments(query);
     const isNext = totalTags > skipAmount + tags.length;
+    console.log(tags.length);
 
     return { tags, isNext };
   } catch (error) {}

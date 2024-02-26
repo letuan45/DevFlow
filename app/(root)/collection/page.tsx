@@ -21,8 +21,6 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
     page: searchParams.page ? +searchParams.page : 1,
   });
 
-  console.log(result.isNext);
-
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>

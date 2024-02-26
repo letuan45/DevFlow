@@ -15,17 +15,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Editor } from "@tinymce/tinymce-react";
 import { useTheme } from "@/context/ThemeProvider";
 import { Button } from "../ui/button";
-import Image from "next/image";
 import { createAnswer } from "@/lib/actions/answer.action";
 import { usePathname } from "next/navigation";
 
 interface Props {
-  question: string;
+  question?: string;
   questionId: string;
   authorId: string;
 }
 
-const Answer = ({ question, questionId, authorId }: Props) => {
+const Answer = ({ questionId, authorId }: Props) => {
   const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const editorRef = useRef(null);
@@ -37,14 +36,10 @@ const Answer = ({ question, questionId, authorId }: Props) => {
     },
   });
 
-  //TODO: AI answer generation
-
   const handleCreateAnswer = async (values: z.infer<typeof AnswerSchema>) => {
     setIsSubmitting(true);
 
     try {
-      console.log(question);
-
       await createAnswer({
         content: values.answer,
         author: JSON.parse(authorId),
@@ -66,13 +61,41 @@ const Answer = ({ question, questionId, authorId }: Props) => {
     }
   };
 
+  // const generateAIAnswer = async () => {
+  //   if (!authorId) return;
+
+  //   setIsSubmittingAIAns(true);
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
+  //       {
+  //         method: "POST",
+  //         body: JSON.stringify({ question }),
+  //       },
+  //     );
+
+  //     const aiAnswer = await response.json();
+
+  //     console.log(aiAnswer.reply);
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw error;
+  //   } finally {
+  //     setIsSubmittingAIAns(false);
+  //   }
+  // };
+
   return (
     <div>
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
         <h4 className="paragraph-semibold text-dark400_light800">
           Write your answer here
         </h4>
-        <Button className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500">
+        {/* <Button
+          className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
+          onClick={generateAIAnswer}
+          disabled={isSubmittingAIAns}
+        >
           <Image
             src="/assets/icons/stars.svg"
             alt="stars"
@@ -81,7 +104,7 @@ const Answer = ({ question, questionId, authorId }: Props) => {
             className="object-contain"
           />
           Generate AI Answer
-        </Button>
+        </Button> */}
       </div>
       <Form {...form}>
         <form
