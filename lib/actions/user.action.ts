@@ -18,6 +18,8 @@ import Question from "@/database/question.model";
 import { Error } from "mongoose";
 import Tag from "@/database/tag.model";
 import Answer from "@/database/answer.model";
+import { BadgeCriteriaType } from "@/types";
+import { assignBadges } from "../utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getUserById = async (params: any) => {
@@ -239,10 +241,48 @@ export const getUserInfo = async (params: GetUserByIdParams) => {
     const totalQuestions = await Question.countDocuments({ author: user._id });
     const totalAnswers = await Answer.countDocuments({ author: user._id });
 
+    const [numOfQuestionsUpvote] = await Question.aggregate([
+      { $match: { author: user._id } },
+      { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
+      { $group: { _id: null, totalUpvotes: { $sum: "$upvotes" } } },
+    ]);
+
+    const [numOfAnswersUpvote] = await Answer.aggregate([
+      { $match: { author: user._id } },
+      { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
+      { $group: { _id: null, totalUpvotes: { $sum: "$upvotes" } } },
+    ]);
+
+    const [numOfQuestionsViews] = await Question.aggregate([
+      { $match: { author: user._id } },
+      { $group: { _id: null, totalViews: { $sum: "$views" } } },
+    ]);
+
+    const criteria = [
+      { type: "QUESTION_COUNT" as BadgeCriteriaType, count: totalQuestions },
+      { type: "ANSWER_COUNT" as BadgeCriteriaType, count: totalAnswers },
+      {
+        type: "QUESTION_UPVOTES" as BadgeCriteriaType,
+        count: numOfQuestionsUpvote?.totalUpvotes || 0,
+      },
+      {
+        type: "ANSWER_UPVOTES" as BadgeCriteriaType,
+        count: numOfAnswersUpvote?.totalUpvotes || 0,
+      },
+      {
+        type: "TOTAL_VIEWS" as BadgeCriteriaType,
+        count: numOfQuestionsViews?.totalViews || 0,
+      },
+    ];
+
+    const badgeCount = assignBadges({ criteria });
+
     return {
       user,
       totalQuestions,
       totalAnswers,
+      badgeCount,
+      reputation: user.reputation,
     };
   } catch (error) {
     console.log(error);
