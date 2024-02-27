@@ -1,12 +1,14 @@
- <a href="https://dev-flow-jet.vercel.app/" style="display: flex; justify-content: center; align-items: center; display: block; width: 100%">
-    <img src="/public/assets/images/site-logo.svg" style="width: 80px; height: 80px"
-alt="DevFlow"
-        />
-    <p style="text-decoration: none; color: rgb(255,112,0)">
-        Dev
-        <span>Overflow</span>
-    </p>
-</a>
+<p align="center">
+  <a href="https://dev-flow-jet.vercel.app/">
+    <img src="https://your-image-url.com/public/assets/images/site-logo.svg" width="80" height="80" alt="DevFlow" />
+  </a>
+</p>
+
+<h1 align="center">
+  <a href="https://dev-flow-jet.vercel.app/" style="text-decoration: none; color: rgb(255,112,0)">
+    Dev<span>Overflow</span>
+  </a>
+</h1>
 
 # DevFlow - Stackoverflow cloning
 
