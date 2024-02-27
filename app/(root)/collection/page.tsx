@@ -9,6 +9,13 @@ import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 import React from "react";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "DevFlow | Collection",
+  description: "Stackoverflow cloning",
+};
+
 const Page = async ({ searchParams }: SearchParamsProps) => {
   const { userId: userClerkId } = auth();
   if (!userClerkId) {

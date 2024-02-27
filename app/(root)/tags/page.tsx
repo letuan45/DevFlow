@@ -8,6 +8,13 @@ import { SearchParamsProps } from "@/types";
 import Link from "next/link";
 import React from "react";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "DevFlow | Tags",
+  description: "Stackoverflow cloning",
+};
+
 const Page = async ({ searchParams }: SearchParamsProps) => {
   const result = await getAllTag({
     searchQuery: searchParams.q,

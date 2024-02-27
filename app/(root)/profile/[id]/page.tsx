@@ -12,6 +12,13 @@ import Stats from "@/components/shared/Stats";
 import QuestionTab from "@/components/shared/QuestionTab";
 import AnswerTab from "@/components/shared/AnswerTab";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "DevFlow | Profile",
+  description: "Stackoverflow cloning",
+};
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Page = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = auth();
@@ -91,7 +98,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
               Answer
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="top-posts" className="w-full">
+          <TabsContent value="top-posts" className="flex w-full flex-col gap-4">
             {clerkId && (
               <QuestionTab
                 searchParams={searchParams}
@@ -100,7 +107,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
               />
             )}
           </TabsContent>
-          <TabsContent value="answers" className="flex w-full flex-col gap-6">
+          <TabsContent value="answers" className="flex w-full flex-col gap-4">
             <AnswerTab
               searchParams={searchParams}
               userId={userInfo.user.id}
