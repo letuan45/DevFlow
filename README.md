@@ -12,8 +12,8 @@
 
 # DevFlow - Stackoverflow cloning
 
-Reference: This project is the final result of JSMastery's NextJS-13 Course
-Deployment: https://dev-flow-jet.vercel.app
+- Reference: This project is the final result of JSMastery's NextJS-13 Course
+- Deployment: https://dev-flow-jet.vercel.app
 
 ## Main Features:
 
