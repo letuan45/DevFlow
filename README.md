@@ -1,10 +1,10 @@
- <a href="https://dev-flow-jet.vercel.app/" style="display: flex; justify-content: center; align-items: center;">
+ <a href="https://dev-flow-jet.vercel.app/" style="display: flex; justify-content: center; align-items: center; display: block; width: 100%">
     <img src="/public/assets/images/site-logo.svg" style="width: 80px; height: 80px"
 alt="DevFlow"
         />
-    <p>
+    <p style="text-decoration: none; color: rgb(255,112,0)">
         Dev
-        <span style="color: rgb(255,112,0)">Overflow</span>
+        <span>Overflow</span>
     </p>
 </a>
 
