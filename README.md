@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://dev-flow-jet.vercel.app/">
-    <img src="https://your-image-url.com/public/assets/images/site-logo.svg" width="80" height="80" alt="DevFlow" />
+    <img src="/public/assets/images/site-logo.svg" width="80" height="80" alt="DevFlow" />
   </a>
 </p>
 
